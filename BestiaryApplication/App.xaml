@@ -1,9 +1,25 @@
 ﻿<Application x:Class="BestiaryApplication.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:BestiaryApplication"
-             StartupUri="MainWindow.xaml">
+             xmlns:resources="clr-namespace:BestiaryApplication.Common.Resources"
+             StartupUri="MainModule/MainWindow.xaml">
+    
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Common/Resources/ResourcesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <resources:ButtonsCustomProperties x:Key="MinimizeButtonTag" 
+                                               MouseOverBackground="{StaticResource shadowed_buttons_highlight_color}"
+                                               IsPressedBackground="{StaticResource buttons_highlight_color}"
+                                               OnEventOpacity="1"
+                                               Opacity="0"/>
+            <resources:ButtonsCustomProperties x:Key="QuitButtonTag" 
+                                               MouseOverBackground="{StaticResource ShadowedErrorColor}"
+                                               IsPressedBackground="{StaticResource ErrorColor}"
+                                               OnEventOpacity="1"
+                                               Opacity="0"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

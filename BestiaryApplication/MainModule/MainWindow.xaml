@@ -1,0 +1,134 @@
+﻿<Window x:Class="BestiaryApplication.MainModule.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:resources="clr-namespace:BestiaryApplication.Common.Resources" 
+        xmlns:sharedControls="clr-namespace:BestiaryApplication.Common.SharedControls.Buttons"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="640"
+        Width="1080"
+        ResizeMode="CanMinimize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <resources:ButtonsCustomProperties x:Key="SlideMenuButtonTag"
+                                                  MouseOverBackground="{StaticResource shadowed_buttons_highlight_color}"
+                                                  IsPressedBackground="{StaticResource buttons_highlight_color}"
+                                                  OnEventOpacity="1"
+                                                  Opacity="0"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border 
+        Background="{DynamicResource MainWindowBackground}" 
+        CornerRadius="15">
+        <Grid x:Name="main_window_container"
+              Margin="5">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="main_window_header"
+              Style="{DynamicResource main_window_header_style}"
+              MouseDown="MoveMainWindow"
+              Margin="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Title"
+                           Margin="5,5,0,0"
+                           Foreground="{DynamicResource MainFontColor}"
+                           FontSize="15"
+                           Grid.Column="0"/>
+
+                <sharedControls:MinimizeButton Grid.Column="2"
+                                               Click="MinimizeApplication"
+                                               Background="{Binding Tag, ElementName=main_window_header}"/>
+                <sharedControls:QuitButton Grid.Column="3"
+                                           Click="CloseApplication"
+                                           Background="{Binding Tag, ElementName=main_window_header}"/>
+            </Grid>
+
+            <Grid Grid.Row="1"    
+                  Background="{DynamicResource main_theme_color}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Tag="{StaticResource SlideMenuButtonTag}"
+                        Style="{StaticResource main_buttons_style}"
+                        x:Name="main_menu_button"
+                        Grid.Row="0"
+                        Margin="1,0,1,1" 
+                        Click="ShowMenu" Height="28" VerticalAlignment="Bottom">
+
+                    <Image Source="pack://Application:,,,/Common/Resources/Assets/ControlIcons/bestiary_app_menu_icon.png"
+                           Margin="1"/>
+
+                </Button>
+
+            </Grid>
+
+            <Grid x:Name="slide_option_menu"
+                  Background="Transparent"
+                  Grid.Column="0"
+                  Grid.Row="1"
+                  Grid.RowSpan="2"
+                  Margin="-1075,0,1075,0" 
+                  Panel.ZIndex="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="MainMenu"
+                      Background="{DynamicResource main_theme_color}"
+                      Grid.Column="0">
+                    <StackPanel Orientation="Vertical" Panel.ZIndex="1" Margin="10,50,10,0">
+                        <sharedControls:MainMenuButton x:Name="AddCreatureButton" Content="Add creature" Click="AddNewCreature"/>
+                        <Separator Height="20" Opacity="0"/>
+                        <sharedControls:MainMenuButton x:Name="AddGameButton" Content="Add Game"/>
+                        <Separator Height="20" Opacity="0"/>
+                        <sharedControls:MainMenuButton x:Name="EditCreaturesButton" Content="Edit creatures"/>
+                        <Separator Height="20" Opacity="0"/>
+                        <sharedControls:MainMenuButton x:Name="ManageGamesButton" Content="Manage games"/>
+                        <Separator Height="20" Opacity="0"/>
+                        <sharedControls:MainMenuButton x:Name="SettingsButton" Content="Settings"/>
+                    </StackPanel>
+
+                    <Border Background="{Binding Tag, ElementName=MainMenu}"
+                            BorderBrush="{DynamicResource MainWindowBackground}"
+                            BorderThickness="2"/>
+                </Grid>
+
+                <Button Grid.Column="1"
+                        Opacity="0"
+                        Click="HideSlideOptionMenu">
+                </Button>
+            </Grid>
+
+
+            <Frame x:Name="main_page_hoster"
+                   Margin="0,3"
+                   Source="MainPage.xaml"
+                   NavigationUIVisibility="Hidden"
+                   Grid.Row="2"/>
+        </Grid>
+    </Border>
+</Window>
