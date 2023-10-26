@@ -7,8 +7,7 @@
              d:DesignHeight="450" 
              d:DesignWidth="800"
              Tag="{StaticResource MinimizeButtonTag}"
-             Style="{StaticResource main_buttons_style}"
-             Background="{StaticResource SecondaryColor}">
+             Style="{StaticResource main_buttons_style}">
 
     <Image Margin="10,10,10,5" 
            Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/minimize_button_icon.png"/>

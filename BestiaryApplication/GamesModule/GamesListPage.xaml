@@ -1,0 +1,482 @@
+﻿<Page x:Class="BestiaryApplication.GamesModule.GamesListPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:resources="clr-namespace:BestiaryApplication.Common.Resources"
+      xmlns:sharedControls="clr-namespace:BestiaryApplication.Common.SharedControls.Buttons"
+      xmlns:viewModel="clr-namespace:BestiaryApplication.GamesModule.ViewModel"
+      xmlns:converters="clr-namespace:BestiaryApplication.GamesModule.Converters"
+      xmlns:placeHolderText="clr-namespace:BestiaryApplication.Common.SharedControls.TextBoxes"
+      mc:Ignorable="d" 
+      d:DesignHeight="556" 
+      d:DesignWidth="1064"
+      Title="GamesListPage">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <viewModel:GameViewModel x:Key="game_view_model"/>
+
+            <resources:ButtonsCustomProperties x:Key="change_image_button_tag"
+                                               MouseOverBackground="{StaticResource shadowed_buttons_highlight_color}"
+                                               IsPressedBackground="{StaticResource buttons_highlight_color}"
+                                               OnEventOpacity="1"
+                                               Opacity="0"/>
+
+            <resources:ButtonsCustomProperties x:Key="genre_type_buttons_tag"
+                                               MouseOverBackground="{StaticResource shadowed_buttons_highlight_color}"
+                                               IsPressedBackground="{StaticResource buttons_highlight_color}"
+                                               OnEventOpacity="1"
+                                               Opacity="0"/> <!--this duplicity is a foolishness of mine-->
+
+            <converters:DateConverter x:Key="game_date_converter"/>
+            <converters:ImagePathConverter x:Key="image_path_converter"/>
+
+            
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid DataContext="{StaticResource game_view_model}"
+          >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Grid   Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Background="{StaticResource main_theme_color}"
+                Margin="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Margin="6"
+                   Source="pack://Application:,,,/Common/Resources/Assets/ControlIcons/search_icon.png"/>
+
+            <placeHolderText:PlaceHolderTextBox 
+                     Grid.Column="1"
+                     x:Name="game_search_bar"
+                     PlaceHolder="Search"
+                     Background="Transparent"
+                     Margin="0,3" 
+                     Width="683"
+                     MaxLength="50"
+                     FontSize="15">
+
+                <TextBox.Text>
+                    <Binding Path="SearchGameName"
+                             UpdateSourceTrigger="PropertyChanged"/>
+                </TextBox.Text>
+
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter"
+                                Command="{Binding SearchGameByNameCommand}"/>
+                </TextBox.InputBindings>
+            </placeHolderText:PlaceHolderTextBox>
+        </Grid>
+
+        <ListView x:Name="games_list_view"
+                  Grid.Column="1"
+                  Grid.Row="1"
+                  BorderBrush="Transparent"
+                  Margin="1"
+                  DataContext="{StaticResource game_view_model}"
+                  Background="{StaticResource main_theme_color}"
+                  ItemsSource="{Binding Games}"
+                  SelectedValue="{Binding SelectedGame}" 
+                  IsSynchronizedWithCurrentItem="True"
+                  VirtualizingPanel.ScrollUnit="Pixel"
+                  Mouse.MouseMove="OnListViewMouseMove"
+                  Mouse.MouseDown="OnListViewMouseDown">
+           
+
+            <ListView.Resources>
+                <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource scroll_bar_style}"/>
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                
+                                <Border x:Name="game_item_border"
+                                        Background="Transparent"
+                                        Height="70"
+                                        HorizontalAlignment="Left"
+                                        Width="382"
+                                        CornerRadius="5">
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="130"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="2*"/>
+                                            <RowDefinition Height="2*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border x:Name="game_image_border"
+                                                Grid.RowSpan="2"
+                                                BorderThickness="2"
+                                                BorderBrush="{StaticResource main_window_borders_color}"
+                                                Margin="3">
+
+                                            <Image Height="90"
+                                                   Width="100"
+                                                   Source="{Binding ImageIcon}"/>
+                                        </Border>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding Name, Mode=OneWay}"
+                                                   Margin="3"/>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="Registered creatures : "
+                                                   Margin="3"/>
+
+                                        <TextBlock Grid.Column="3"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding RegisteredCreatures}"
+                                                   Margin="3"/>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Grid.Row="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="Date Registered : "
+                                                   Margin="3"/>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Grid.Row="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding DateRegistered, 
+                                                          Converter={StaticResource game_date_converter}}"
+                                                   Margin="3"/>
+
+                                        <Button Grid.Column="3"
+                                                Grid.Row="1"
+                                                Content="delete"
+                                                Margin="5"
+                                                Command="{Binding Path=DataContext.DeleteGameCommand,
+                                                          RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                CommandParameter="{Binding Id}"/>
+
+                                    </Grid>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter TargetName="game_item_border"
+                                                Property="Background"
+                                                Value="{StaticResource shadowed_buttons_highlight_color}"/>
+                                        <Setter TargetName="game_image_border"
+                                                Property="BorderBrush"
+                                                Value="{StaticResource buttons_highlight_color}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                            
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            
+        </ListView>
+
+        <ListView Grid.Column="2"
+                  Grid.Row="1"
+                  Grid.RowSpan="2"
+                  BorderBrush="Transparent"
+                  Background="{StaticResource main_theme_color}"
+                  Margin="1"
+                  ItemsSource="{Binding CreatureViewModel.Creatures}"
+                  IsSynchronizedWithCurrentItem="True">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Background="Transparent"
+                          Height="40">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0"
+                               Height="90"
+                               Width="100"
+                               Source="{Binding ImageIcon}"/>
+
+                        <TextBlock Grid.Column="1"
+                                   Style="{StaticResource main_textblocks_style}"
+                                   Text="{Binding Name}"/>
+
+                        <TextBlock Grid.Column="2"
+                                   Style="{StaticResource main_textblocks_style}"
+                                   Text="{Binding Type}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock Style="{StaticResource main_textblocks_style}"
+                   Background="{StaticResource main_theme_color}"
+                   Text="Edit"
+                   Padding="160,3"
+                   FontSize="15"
+                   Margin="1"/>
+
+        <Grid x:Name="game_data_list"
+                    Grid.Row="1"
+                    Background="{StaticResource main_theme_color}"
+                    Margin="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <placeHolderText:PlaceHolderTextBox
+                     Text="{Binding SelectedGame.Name}"
+                     PlaceHolder="Edit Name"
+                     Background="Transparent"
+                     FontSize="15"
+                     Margin="122,5,95,5"/>
+
+            <sharedControls:RadiusButtonModel 
+                    Grid.Row="1"
+                    Content="Change Image"
+                    FontSize="15"
+                    Margin="95,4,95,8"
+                    Command="{Binding ChangeGameImageCommand}"/>
+
+            <Border BorderBrush="{StaticResource main_window_borders_color}"
+                    BorderThickness="2"
+                    Background="{StaticResource main_window_background}"
+                    CornerRadius="5"
+                    Grid.Row="2"
+                    Margin="10,0,10,0" Grid.RowSpan="2">
+
+                <Image Source="{Binding SelectedGame.ImageIcon}"/>
+            </Border>
+
+        </Grid>
+
+        <Grid Grid.Column="1"
+              Grid.Row="2"
+              Margin="1"
+              Background="{StaticResource main_window_background}">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="125"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Name="add_game_window_header"
+                  Background="{StaticResource main_theme_color}"
+                  Margin="1"
+                  Grid.ColumnSpan="3">
+
+                <TextBlock Style="{StaticResource main_textblocks_style}"
+                           Background="Transparent"
+                           Text="Add game"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Padding="60,0,0,0" 
+                           Margin="0,0,58,0"/>
+            </Grid>
+
+            <Grid Grid.Column="0"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="2"
+                  Background="{StaticResource main_theme_color}"
+                  Margin="1">
+
+                <TextBlock Style="{StaticResource main_textblocks_style}"
+                           Text="Name :"
+                           Padding="5,5"
+                           Margin="1,1,100,1"/>
+
+                <TextBox Style="{StaticResource main_textboxes_style}"
+                         Background="{StaticResource main_theme_color}"
+                         Margin="50,5,0,5"
+                         Text="{Binding GameName}"
+                         TextWrapping="NoWrap"
+                         MaxLength="50"/>
+            </Grid>
+
+            <Border Grid.Column="2"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
+                    Background="{StaticResource main_theme_color}"
+                    Margin="1">
+
+                <Expander x:Name="genre_selector"
+                          FlowDirection="RightToLeft"
+                          Grid.Column="2"
+                          Grid.Row="1"
+                          Grid.RowSpan="3"
+                          Background="{StaticResource main_theme_color}" 
+                          Margin="2,4,140,0">
+
+                    <Expander.Header>
+                        <TextBlock Text="Select Genre"
+                                   Style="{StaticResource main_textblocks_style}"/>
+                    </Expander.Header>
+
+                    <ListView x:Name="genres_list"
+                              Background="{StaticResource main_theme_color}"
+                              BorderBrush="Transparent"
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              ItemsSource="{Binding ExpanderOptions}"
+                              SelectedValue="{Binding GameGenre}"
+                              IsSynchronizedWithCurrentItem="True">
+
+                        <ListView.ItemTemplate>
+                            
+                            <DataTemplate>
+                                <Border x:Name="expander_option"
+                                        CornerRadius="10">
+
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource main_textblocks_style}"
+                                               TextAlignment="Center"/>
+                                </Border>
+
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter TargetName="expander_option"
+                                                    Property="Background"
+                                                    Value="{StaticResource shadowed_buttons_highlight_color}"/>
+                                    </Trigger>
+
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+
+                </Expander>
+            </Border>
+
+            <TextBlock x:Name="genre_displayer"
+                       TextAlignment="Center"
+                       Text="{Binding SelectedValue, ElementName=genres_list}"
+                       Grid.Column="2"
+                       Grid.Row="1"
+                       Style="{StaticResource main_textblocks_style}" Margin="120,10,10,5"/>
+
+            <Grid Grid.Row="2"
+                  Grid.ColumnSpan="2"
+                  Background="{StaticResource main_theme_color}"
+                  Margin="1">
+
+                <sharedControls:RadiusButtonModel Content="Add Image"
+                                                  Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Background="{StaticResource main_theme_color}" 
+                                                  Margin="20,2,20,102"
+                                                  Command="{Binding AddGameImagePathCommand}"/>
+                
+                <Border BorderBrush="{StaticResource main_window_borders_color}"
+                        Background="{StaticResource main_window_background}"
+                        BorderThickness="2"
+                        CornerRadius="5"
+                        Margin="15,25,15,5">
+                    <Image Source="{Binding GameImageIconPath, 
+                                Converter={StaticResource image_path_converter}}"/>
+                </Border>
+                
+            </Grid>
+
+            <Grid Grid.Column="0"
+                  Grid.Row="4"
+                  Grid.ColumnSpan="2"
+                  Background="{StaticResource main_theme_color}"
+                  Margin="1">
+
+                <sharedControls:RadiusButtonModel Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Background="{StaticResource main_theme_color}"
+                                                  Content="Save"
+                                                  FontSize="12" 
+                                                  Margin="40,4,40,50"
+                                                  Command="{Binding AddGameCommand}"/>
+
+                <sharedControls:RadiusButtonModel Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Background="{StaticResource main_theme_color}"
+                                                  Content="Yes"
+                                                  Margin="10,30,83,24"/>
+
+                <sharedControls:RadiusButtonModel Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Style="{StaticResource main_buttons_style}"
+                                                  Content="No"
+                                                  Background="{StaticResource main_theme_color}" 
+                                                  Margin="83,30,10,24"/>
+            </Grid>
+
+
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Background="{StaticResource main_theme_color}"
+              Margin="1">
+
+            <sharedControls:RadiusButtonModel
+                Content="Save"
+                FontSize="15" 
+                Margin="140,20,140,221"
+                Command="{Binding SaveChangesCommand}"/>
+
+            <sharedControls:RadiusButtonModel Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Background="{StaticResource main_theme_color}"
+                                                  Content="Yes"
+                                                  Margin="113,45,186,196"/>
+
+            <sharedControls:RadiusButtonModel Tag="{StaticResource genre_type_buttons_tag}"
+                                                  Style="{StaticResource main_buttons_style}"
+                                                  Content="No"
+                                                  Background="{StaticResource main_theme_color}" 
+                                                  Margin="183,45,122,196"/>
+
+        </Grid>
+    </Grid>
+</Page>

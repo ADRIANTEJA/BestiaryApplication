@@ -1,0 +1,52 @@
+﻿<Page x:Class="BestiaryApplication.SettingsModule.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" 
+      d:DesignWidth="800"
+      Title="SettingsPage">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Expander x:Name="theme_selector"
+                      FlowDirection="RightToLeft">
+                
+                <Expander.Header>
+                    <TextBlock Text="Theme"
+                               Style="{StaticResource main_textblocks_style}"/>
+                </Expander.Header>
+                
+                
+            </Expander>
+        </Grid>
+        
+    </Grid>
+</Page>

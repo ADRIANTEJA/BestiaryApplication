@@ -1,4 +1,6 @@
-﻿using BestiaryApplication.GamesModule;
+﻿using BestiaryApplication.CreatureModule;
+using BestiaryApplication.GamesModule;
+using BestiaryApplication.SettingsModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace BestiaryApplication.MainModule
 {
@@ -29,6 +32,10 @@ namespace BestiaryApplication.MainModule
             InitializeComponent();
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             SetupAnimations();
+
+            this.InvalidateVisual();
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() => { })).Wait();
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Render, new Action(() => { })).Wait();
         }
 
         private void SetupAnimations()
@@ -87,10 +94,28 @@ namespace BestiaryApplication.MainModule
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void AddNewCreature(object sender, RoutedEventArgs e)
+        private void ShowGamesListPage(object sender, RoutedEventArgs e)
         {
-            CreatureCreationWindow creatureCreationWindow = new();
-            creatureCreationWindow.ShowDialog();
+            main_page_hoster.Navigate(new GamesListPage());
+            page_header.Text = "Games";
+        }
+
+        private void GoBackHome(object sender, RoutedEventArgs e)
+        {
+            main_page_hoster.Navigate(new MainPage());
+            page_header.Text = "Home";
+        }
+
+        private void ShowCreatureListPage(object sender, RoutedEventArgs e)
+        {
+            main_page_hoster.Navigate(new CreatureListPage());
+            page_header.Text = "Creatures";
+        }
+
+        private void ShowSettingsPage(object sender, RoutedEventArgs e)
+        {
+            main_page_hoster.Navigate(new SettingsPage());
+            page_header.Text = "Settings";
         }
     }
 }

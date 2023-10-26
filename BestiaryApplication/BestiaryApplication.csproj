@@ -9,24 +9,31 @@
 
   <ItemGroup>
     <None Remove="Common\Resources\Assets\ControlIcons\bestiary_app_menu_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\dark_element_icon.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\illust58-2050.png" />
-    <None Remove="Common\Resources\Assets\ControlIcons\Layer 1.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\minimize_button_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\monster_strong_point.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\monster_type_icon.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\quit_button_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\search_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\weakness_icon.png" />
     <None Remove="Common\Resources\Assets\CreatureIcons\bestiaty_icon_example.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Common\Resources\Assets\ControlIcons\bestiary_app_menu_icon.png" />
-    <Resource Include="Common\Resources\Assets\ControlIcons\Layer 1.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\dark_element_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\monster_strong_point.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\monster_type_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\quit_button_icon.png" />
     <Resource Include="Common\Resources\Assets\ControlIcons\minimize_button_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\search_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\weakness_icon.png" />
     <Resource Include="Common\Resources\Assets\CreatureIcons\bestiaty_icon_example.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Database\" />
-    <Folder Include="Common\utils\" />
-    <Folder Include="GamesModule\" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
   </ItemGroup>
 
 </Project>

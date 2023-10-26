@@ -7,9 +7,8 @@
              d:DesignHeight="450" 
              d:DesignWidth="800"
              Tag="{StaticResource QuitButtonTag}"
-             Style="{StaticResource main_buttons_style}"
-             Background="{StaticResource SecondaryColor}">
+             Style="{StaticResource main_buttons_style}">
 
     <Image Margin="10,10,10,10"
-           Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/Layer 1.png"/>
+           Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/quit_button_icon.png"/>
 </Button>

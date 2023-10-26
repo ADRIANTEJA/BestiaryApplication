@@ -1,31 +1,77 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="main_theme_color" Color="#232526"/>
-    <SolidColorBrush x:Key="SecondaryColor" Color="#343A40"/>
-    <SolidColorBrush x:Key="MainWindowBackground" Color="#010409"/>
+    <SolidColorBrush x:Key="secondary_color" Color="#343A40"/>
+    <SolidColorBrush x:Key="main_window_background" Color="#1b1a17"/>
+    <SolidColorBrush x:Key="main_window_borders_color" Color="#532A19"/>
     <SolidColorBrush x:Key="buttons_highlight_color" Color="#ADA7A7"/>
-    <SolidColorBrush x:Key="shadowed_buttons_highlight_color" Color="#562A18"/>
+    <SolidColorBrush x:Key="shadowed_buttons_highlight_color" Color="#532A19"/>
     <SolidColorBrush x:Key="ErrorColor" Color="#D0011B"/>
     <SolidColorBrush x:Key="ShadowedErrorColor" Color="#B80117"/>
-    <SolidColorBrush x:Key="MainFontColor" Color="#FBFBFB"/>
+    <SolidColorBrush x:Key="main_font_color" Color="#FBFBFB"/>
+    <SolidColorBrush x:Key="place_holder_font_color" Color="#7F7F7F"/>
+
+    <DropShadowEffect x:Key="main_window_drop_shadow" ShadowDepth="10"/>
 
     <Style x:Key="main_theme_style" TargetType="{x:Type Grid}">
         <Setter Property="Background" Value="{StaticResource main_theme_color}"/>
     </Style>
 
     <Style x:Key="main_window_header_style" TargetType="{x:Type Grid}">
-        <Setter Property="Background" Value="{StaticResource SecondaryColor}"/>
+        <Setter Property="Background" Value="{StaticResource secondary_color}"/>
     </Style>
 
     <Style x:Key="main_textblocks_style" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="century"/>
-        <Setter Property="Foreground" Value="{StaticResource MainFontColor}"/>
+        <Setter Property="Foreground" Value="{StaticResource main_font_color}"/>
+    </Style>
+
+    <Style x:Key="main_textboxes_style" TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily" Value="century"/>
+        <Setter Property="Foreground" Value="{StaticResource main_font_color}"/>
+        <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Self}, Path=Background}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="CaretBrush" Value="{StaticResource main_font_color}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+
+                    <Border x:Name="border" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" 
+                            SnapsToDevicePixels="True">
+                        
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                      Focusable="false" 
+                                      HorizontalScrollBarVisibility="Hidden" 
+                                      VerticalScrollBarVisibility="Hidden"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" 
+                                    Property="BorderBrush" 
+                                    Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="border" 
+                                    Property="BorderBrush" 
+                                    Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="main_buttons_style" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{StaticResource main_font_color}"/>
+        <Setter Property="FontFamily" Value="century"/>
         <Setter Property="Template">
+
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="highlight"
@@ -56,4 +102,86 @@
         </Setter>
     </Style>
 
+    <Style x:Key="repeat_button_style" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Background" Value="{StaticResource main_theme_color}"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            Height="{TemplateBinding Height}"
+                            Width="{TemplateBinding Width}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="scroll_bar_thumb_style" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border x:Name="scroll_bar_thumb_rectangle"
+                            Background="{StaticResource main_window_borders_color}"
+                            Height="{TemplateBinding Height}"
+                            Width="{TemplateBinding Width}"
+                            SnapsToDevicePixels="True"
+                            CornerRadius="5,0,0,5"/>
+                   
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="scroll_bar_thumb_rectangle"
+                                    Property="Background"
+                                    Value="{StaticResource buttons_highlight_color}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="scroll_bar_style" TargetType="{x:Type ScrollBar}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Background" Value="{StaticResource main_theme_color}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid SnapsToDevicePixels="True">
+
+                        <Border Grid.Row="1"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"/>
+
+                        <Track Grid.Row="1"
+                               IsDirectionReversed="True" 
+                               IsEnabled="{TemplateBinding IsMouseOver}">
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}"
+                                              HorizontalAlignment="Left"
+                                              Style="{StaticResource repeat_button_style}"
+                                              Width="10"/>
+                            </Track.IncreaseRepeatButton>
+
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}"
+                                              HorizontalAlignment="Left"
+                                              Style="{StaticResource repeat_button_style}"
+                                              Width="10"/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Margin="1"
+                                       Style="{StaticResource scroll_bar_thumb_style}"/>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

@@ -5,9 +5,9 @@ namespace BestiaryApplication.Common.SharedControls.Buttons
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class MainMenuButton : Button
+    public partial class RadiusButtonModel : Button
     {
-        public MainMenuButton()
+        public RadiusButtonModel()
         {
             InitializeComponent();
         }

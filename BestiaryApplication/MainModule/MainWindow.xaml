@@ -16,7 +16,7 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <resources:ButtonsCustomProperties x:Key="SlideMenuButtonTag"
+            <resources:ButtonsCustomProperties x:Key="slide_menu_button_tag"
                                                   MouseOverBackground="{StaticResource shadowed_buttons_highlight_color}"
                                                   IsPressedBackground="{StaticResource buttons_highlight_color}"
                                                   OnEventOpacity="1"
@@ -25,8 +25,12 @@
     </Window.Resources>
 
     <Border 
-        Background="{DynamicResource MainWindowBackground}" 
-        CornerRadius="15">
+        Background="{StaticResource main_window_background}"
+        BorderBrush="{StaticResource main_window_borders_color}"
+        BorderThickness="3"
+        CornerRadius="5"
+        Effect="{StaticResource main_window_drop_shadow}">
+        
         <Grid x:Name="main_window_container"
               Margin="5">
 
@@ -44,22 +48,24 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="30"/>
-                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="33"/>
+                    <ColumnDefinition Width="33"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Title"
                            Margin="5,5,0,0"
-                           Foreground="{DynamicResource MainFontColor}"
+                           Foreground="{DynamicResource main_font_color}"
                            FontSize="15"
                            Grid.Column="0"/>
 
                 <sharedControls:MinimizeButton Grid.Column="2"
                                                Click="MinimizeApplication"
-                                               Background="{Binding Tag, ElementName=main_window_header}"/>
+                                               Background="{Binding Tag, ElementName=main_window_header}"
+                                               Margin="0,0,3,0"/>
                 <sharedControls:QuitButton Grid.Column="3"
                                            Click="CloseApplication"
-                                           Background="{Binding Tag, ElementName=main_window_header}"/>
+                                           Background="{Binding Tag, ElementName=main_window_header}"
+                                           Margin="3,0,0,0"/>
             </Grid>
 
             <Grid Grid.Row="1"    
@@ -70,7 +76,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Tag="{StaticResource SlideMenuButtonTag}"
+                <Button Tag="{StaticResource slide_menu_button_tag}"
                         Style="{StaticResource main_buttons_style}"
                         x:Name="main_menu_button"
                         Grid.Row="0"
@@ -81,6 +87,14 @@
                            Margin="1"/>
 
                 </Button>
+
+                <TextBlock x:Name="page_header"
+                           Grid.Column="1"
+                           Style="{StaticResource main_textblocks_style}"
+                           Background="Transparent"
+                           Text="Home"
+                           FontSize="18"
+                           Padding="500,3"/>
 
             </Grid>
 
@@ -101,19 +115,17 @@
                       Background="{DynamicResource main_theme_color}"
                       Grid.Column="0">
                     <StackPanel Orientation="Vertical" Panel.ZIndex="1" Margin="10,50,10,0">
-                        <sharedControls:MainMenuButton x:Name="AddCreatureButton" Content="Add creature" Click="AddNewCreature"/>
+                        <sharedControls:RadiusButtonModel x:Name="home_button" Content="Home" Click="GoBackHome" FontSize="18"/>
                         <Separator Height="20" Opacity="0"/>
-                        <sharedControls:MainMenuButton x:Name="AddGameButton" Content="Add Game"/>
+                        <sharedControls:RadiusButtonModel x:Name="EditCreaturesButton" Content="Manage Creatures" FontSize="18" Click="ShowCreatureListPage"/>
                         <Separator Height="20" Opacity="0"/>
-                        <sharedControls:MainMenuButton x:Name="EditCreaturesButton" Content="Edit creatures"/>
+                        <sharedControls:RadiusButtonModel x:Name="ManageGamesButton" Content="Manage games" Click="ShowGamesListPage" FontSize="18"/>
                         <Separator Height="20" Opacity="0"/>
-                        <sharedControls:MainMenuButton x:Name="ManageGamesButton" Content="Manage games"/>
-                        <Separator Height="20" Opacity="0"/>
-                        <sharedControls:MainMenuButton x:Name="SettingsButton" Content="Settings"/>
+                        <sharedControls:RadiusButtonModel x:Name="SettingsButton" Content="Settings" FontSize="18" Click="ShowSettingsPage"/>
                     </StackPanel>
 
                     <Border Background="{Binding Tag, ElementName=MainMenu}"
-                            BorderBrush="{DynamicResource MainWindowBackground}"
+                            BorderBrush="{DynamicResource main_window_background}"
                             BorderThickness="2"/>
                 </Grid>
 

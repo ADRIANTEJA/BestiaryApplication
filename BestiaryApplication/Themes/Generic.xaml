@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sharedResources="clr-namespace:BestiaryApplication.Common.SharedControls.TextBoxes">
+
+    <Style TargetType="{x:Type sharedResources:PlaceHolderTextBox}">
+
+        <Style.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="..\Common\Resources\ResourcesDictionary.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Style.Resources>
+        
+        <Setter Property="Padding" Value="3,0,0,0"/>
+        <Setter Property="FontFamily" Value="century"/>
+        <Setter Property="Foreground" Value="{StaticResource main_font_color}"/>
+        <Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Self}, Path=Background}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="CaretBrush" Value="{StaticResource main_font_color}"/>
+        <Setter Property="TextWrapping" Value="NoWrap"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type sharedResources:PlaceHolderTextBox}">
+                    <ControlTemplate.Resources>
+                        <BooleanToVisibilityConverter x:Key="boolean_to_visibility_converter"/>
+                    </ControlTemplate.Resources>
+
+                    <Grid>
+
+                        <Border x:Name="border" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" 
+                            SnapsToDevicePixels="True">
+                            
+                            <TextBlock x:Name="place_holder_text"
+                                       Text="{TemplateBinding PlaceHolder}"
+                                       FontStyle="Italic"
+                                       Foreground="{StaticResource place_holder_font_color}"
+                                       Visibility="{TemplateBinding IsEmpty, 
+                                       Converter={StaticResource boolean_to_visibility_converter}}"
+                                       Padding="5, 0, 0, 0"/>
+                        </Border>
+
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                      Focusable="false" 
+                                      HorizontalScrollBarVisibility="Hidden" 
+                                      VerticalScrollBarVisibility="Hidden"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" 
+                                    Property="BorderBrush" 
+                                    Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="border" 
+                                    Property="BorderBrush" 
+                                    Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Background}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="False">
+                            <Setter TargetName="place_holder_text" Property="FontStyle" Value="Italic"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="place_holder_text" Property="FontStyle" Value="Normal"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
