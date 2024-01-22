@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BestiaryApplication.Common.Resources.Assets.Cursors;
+using BestiaryApplication.Common.utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +26,19 @@ namespace BestiaryApplication.MainModule
         {
             InitializeComponent();
         }
+
+        private void OnLatestCreatureImageMouseEnter(object sender, MouseEventArgs e)
+        {
+            last_consulted_creature_image.Cursor = CustomCursors.ZoomCursor;
+        }
+
+        private void OnLatestCreatureImageMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var image = (Image)sender;
+
+            if (image.Source != null) GeneralMethods.ZoomImage(image.Source);
+        }
+
+        
     }
 }

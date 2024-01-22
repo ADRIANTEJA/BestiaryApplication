@@ -15,6 +15,7 @@
                                                IsPressedBackground="{StaticResource buttons_highlight_color}"
                                                OnEventOpacity="1"
                                                Opacity="0"/>
+            
             <resources:ButtonsCustomProperties x:Key="QuitButtonTag" 
                                                MouseOverBackground="{StaticResource ShadowedErrorColor}"
                                                IsPressedBackground="{StaticResource ErrorColor}"

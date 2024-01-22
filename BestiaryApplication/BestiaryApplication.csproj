@@ -10,7 +10,10 @@
   <ItemGroup>
     <None Remove="Common\Resources\Assets\ControlIcons\bestiary_app_menu_icon.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\dark_element_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\delete_button_icon.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\delete_button_on_click_icon.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\illust58-2050.png" />
+    <None Remove="Common\Resources\Assets\ControlIcons\image_control_placeholder.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\minimize_button_icon.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\monster_strong_point.png" />
     <None Remove="Common\Resources\Assets\ControlIcons\monster_type_icon.png" />
@@ -21,8 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Common\Resources\Assets\Cursors\zoom_cursor.cur" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Common\Resources\Assets\ControlIcons\bestiary_app_menu_icon.png" />
     <Resource Include="Common\Resources\Assets\ControlIcons\dark_element_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\delete_button_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\delete_button_on_click_icon.png" />
+    <Resource Include="Common\Resources\Assets\ControlIcons\image_control_placeholder.png" />
     <Resource Include="Common\Resources\Assets\ControlIcons\monster_strong_point.png" />
     <Resource Include="Common\Resources\Assets\ControlIcons\monster_type_icon.png" />
     <Resource Include="Common\Resources\Assets\ControlIcons\quit_button_icon.png" />
@@ -33,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.9" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using BestiaryApplication.Common.utils;
 using BestiaryApplication.CreatureModule.Model;
 using BestiaryApplication.CreatureModule.ViewModel;
@@ -21,15 +22,13 @@ namespace BestiaryApplication.GamesModule.ViewModel
 {
     public class GameViewModel : INotifyPropertyChanged
     {
-        private string[] expanderOptions;
-
-        public string[] ExpanderOptions
-        {
-            get { return expanderOptions = new string[9] {"RPG", "Action-RPG", "RTS", "MMO",
+        private string[] genreTypes = new string[9] {"RPG", "Action-RPG", "RTS", "MMO",
                                                           "Shooter", "Survival", "Horror",
-                                                          "Plattforming" , "Adventure"}; }
+                                                          "Plattforming" , "Adventure"};
+        public string[] GenreTypes
+        {
+            get { return genreTypes; }
         }
-
 
         private ObservableCollection<Game>? games;
 
@@ -63,7 +62,7 @@ namespace BestiaryApplication.GamesModule.ViewModel
             }
         }
 
-        private string  gameGenre = "RPG";
+        private string gameGenre;
 
         public string  GameGenre
         {
@@ -75,15 +74,15 @@ namespace BestiaryApplication.GamesModule.ViewModel
             }
         }
 
-        private string gameImageIconPath;
+        private BitmapImage? gameImage;
 
-        public string GameImageIconPath
+        public BitmapImage? GameImage
         {
-            get { return gameImageIconPath; }
+            get { return gameImage; }
             set 
             { 
-                gameImageIconPath = value;
-                OnPropertyChanged(nameof(GameImageIconPath));
+                gameImage = value;
+                OnPropertyChanged(nameof(GameImage));
             }
         }
 
@@ -151,7 +150,7 @@ namespace BestiaryApplication.GamesModule.ViewModel
             { 
                 if (_changeGameImageCommand == null)
                 {
-                    _changeGameImageCommand = new DelegateCommand(ChangeGameImage);
+                    _changeGameImageCommand = new DelegateCommand(ChangeGameImage, CanChangeGameImage);
                 }
                 return _changeGameImageCommand; 
             }
@@ -179,7 +178,7 @@ namespace BestiaryApplication.GamesModule.ViewModel
             { 
                 if (_saveChangesCommand == null)
                 {
-                    _saveChangesCommand = new DelegateCommand(UpdateCreature, CanUpdateCreature);
+                    _saveChangesCommand = new DelegateCommand(UpdateGame, CanUpdateGame);
                 }
                 return _saveChangesCommand; 
             }
@@ -193,7 +192,7 @@ namespace BestiaryApplication.GamesModule.ViewModel
             {
                 if (_deleteGameCommand == null)
                 {
-                    _deleteGameCommand = new DelegateCommand(DeleteGame);
+                    _deleteGameCommand = new DelegateCommand(DeleteGame, CanDeleteGame);
                 }
                 return _deleteGameCommand; 
             }
@@ -213,45 +212,41 @@ namespace BestiaryApplication.GamesModule.ViewModel
                 Genre = GameGenre,
                 RegisteredCreatures = 0,
                 DateRegistered = DateTime.Now.Ticks,
-                ImageIcon = File.ReadAllBytes(GameImageIconPath) 
+                ImageIcon = GeneralMethods.ConvertToBytes(gameImage)
             };
 
             Games.Add(newGame);
             GameRespository.InsertGame(newGame);
+            GameImage = null;
         }
 
         private bool CanAddGame(object parameter)
         {
-            if (string.IsNullOrEmpty(gameName) || string.IsNullOrEmpty(gameImageIconPath)) return false;
+            if (string.IsNullOrEmpty(gameName) || gameImage == null) return false;
             else return true;
         }
-        
+
         private void SetGameImageIcon(object parameter)
         {
             try
             {
-                GameImageIconPath = GeneralMethods.GetImagePath();
+                GameImage = GeneralMethods.LoadImage(GeneralMethods.GetImagePath());
             }
-            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-            {
-                MessageBox.Show("An error has occured try again");
-            }
-            catch (Exception e) when (e is ArgumentException) {}
+            catch {}
         }
-
         private void ChangeGameImage(object parameter)
         {
             try
             {
                 SelectedGame.ImageIcon = File.ReadAllBytes(GeneralMethods.GetImagePath());
             }
-            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException
-                                      or ArgumentException)
-            {
-                MessageBox.Show("An error has occured try again");
-            }
-            catch (Exception e) when (e is ArgumentException) {}
+            catch {}
             OnPropertyChanged(nameof(SelectedGame));
+        }
+
+        private bool CanChangeGameImage(object parameter)
+        {
+            return selectedGame == null ? false : true;
         }
 
         private void SearchGameByName(object parameter)
@@ -264,25 +259,28 @@ namespace BestiaryApplication.GamesModule.ViewModel
             Games = new ObservableCollection<Game>(GameRespository.QueryGameByName(searchGameName)); 
         }
 
-        private void UpdateCreature(object parameter)
+        private void UpdateGame(object parameter)
         {
             GameRespository.UpdateGame(SelectedGame);
             Games = new ObservableCollection<Game>(GameRespository.QueryAllGames());    
         }
 
-        private bool CanUpdateCreature(object parameter)
+        private bool CanUpdateGame(object parameter)
         {
-            if (selectedGame == null || string.IsNullOrEmpty(SelectedGame.Name)) return false;
-            return true;
+            return SelectedGame != null && !string.IsNullOrEmpty(SelectedGame.Name);
         }
 
         private void DeleteGame(object parameter)
         {
-            var gameId = (int)parameter;
-            GameRespository.DeleteGame(gameId);
+            GameRespository.DeleteGame(selectedGame.Id);
 
             var gameToDelete = Games.Where(g => g.Id == selectedGame.Id).First();
             Games.Remove(gameToDelete);
+        }
+
+        private bool CanDeleteGame(object parameter)
+        {
+            return selectedGame != null;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

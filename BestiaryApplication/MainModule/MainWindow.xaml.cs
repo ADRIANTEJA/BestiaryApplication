@@ -33,7 +33,7 @@ namespace BestiaryApplication.MainModule
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             SetupAnimations();
 
-            this.InvalidateVisual();
+            InvalidateVisual();
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() => { })).Wait();
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Render, new Action(() => { })).Wait();
         }
@@ -44,7 +44,7 @@ namespace BestiaryApplication.MainModule
             {
                 From = new Thickness(-1075, 0, 1075, 0),
                 To = new Thickness(0, 0, 0, 0),
-                Duration = new Duration(TimeSpan.FromSeconds(0.5)),
+                Duration = TimeSpan.FromSeconds(0.5),
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
             };
 
@@ -58,7 +58,7 @@ namespace BestiaryApplication.MainModule
             {
                 From = new Thickness(0, 0, 0, 0),
                 To = new Thickness(-1075, 0, 1075, 0),
-                Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                Duration = TimeSpan.FromSeconds(0.3),
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
             };
 

@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using System.IO;
+using BestiaryApplication.Common.SharedControls.Windows;
+using System.Windows.Controls;
 
 namespace BestiaryApplication.Common.utils
 {
@@ -12,8 +16,10 @@ namespace BestiaryApplication.Common.utils
     {
         public static string GetImagePath()
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Filter = "Image files (*.jpg, *.jpeg, *.png, *.bmp) | *.jpg; *.jpeg; *.png; *.bmp";
+            Microsoft.Win32.OpenFileDialog dlg = new()
+            {
+                Filter = "Image files (*.jpg, *.jpeg, *.png, *.bmp) | *.jpg; *.jpeg; *.png; *.bmp"
+            };
 
             if (dlg.ShowDialog() == true) return dlg.FileName;
             else return "";
@@ -40,6 +46,35 @@ namespace BestiaryApplication.Common.utils
             }
         }
 
+        public static byte[] ConvertToBytes(BitmapImage bitmapImage)
+        {
+            byte[] data;
+            JpegBitmapEncoder encoder = new();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+
+            using (MemoryStream ms = new())
+            {
+                encoder.Save(ms);
+                data = ms.ToArray();
+            }
+
+            return data;
+        }
+
+        public static BitmapImage LoadImage(string path)
+        {
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+
+            if (!string.IsNullOrEmpty(path)) image.UriSource = new(path);
+            else image.UriSource = new("ControlIcons/image_control_placeholder.png", UriKind.Relative);
+            
+            image.EndInit();
+
+            return image;
+        }
+
         public static T FindVisualChild<T>(DependencyObject obj)
         where T : DependencyObject
         {
@@ -48,6 +83,16 @@ namespace BestiaryApplication.Common.utils
                 return child;
             }
             return null;
+        }
+
+        public static void ZoomImage(ImageSource imageSource)
+        {
+            var displayWindow = new ImageDisplayWindow();
+
+            var image = (Image)displayWindow.FindName("zoomed_image");
+            image.Source = imageSource;
+
+            displayWindow.ShowDialog();
         }
     }
 }

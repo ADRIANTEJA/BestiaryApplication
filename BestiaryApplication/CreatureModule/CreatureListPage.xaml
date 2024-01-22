@@ -6,12 +6,14 @@
       xmlns:sharedControls="clr-namespace:BestiaryApplication.Common.SharedControls.Buttons"
       xmlns:placeHolderText="clr-namespace:BestiaryApplication.Common.SharedControls.TextBoxes"
       xmlns:viewModel="clr-namespace:BestiaryApplication.CreatureModule.ViewModel"
-      xmlns:converters="clr-namespace:BestiaryApplication.CreatureModule.Converters"
+      xmlns:converters="clr-namespace:BestiaryApplication.Common.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      x:Name="creature_list_page"
       mc:Ignorable="d" 
       d:DesignHeight="556" 
       d:DesignWidth="1064"
-      Title="CreatureListPage">
+      Title="CreatureListPage" 
+      Unloaded="OnCreaturePageUnloaded">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -28,32 +30,32 @@
                                                Opacity="0"/>
 
             <viewModel:CreatureViewModel x:Key="creature_view_model"/>
-
             <converters:ImagePathConverter x:Key="image_path_converter"/>
+            <converters:DateConverter x:Key="game_date_converter"/>
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid DataContext="{StaticResource creature_view_model}">
+    <Grid x:Name="main_page_container"
+          DataContext="{StaticResource creature_view_model}">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="75"/>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="280"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid x:Name="creature_creation_header"
               Grid.ColumnSpan="4" 
               Background="{StaticResource main_theme_color}"
-              Margin="1">
+              Margin="1,0,1,1">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -77,141 +79,123 @@
                     Orientation="Vertical"
                     Grid.Row="1"
                     Grid.Column="0"
-                    Grid.RowSpan="2"
                     Margin="1">
 
-            <Rectangle Width="50"
-                           Height="30" 
-                           Fill="{Binding Tag, ElementName=CreationAtributesIcons}"/>
+            <Rectangle Width="42"
+                       Height="38" 
+                       Fill="{Binding Tag, ElementName=CreationAtributesIcons}"/>
 
-            <Image Margin="10,18,10,10"
+            <Image Margin="5,20,5,0"
                    Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/monster_type_icon.png"/>
-            <Image Margin="10"
+            <Image Margin="5,20,5,0"
                    Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/dark_element_icon.png"/>
-            <Image Margin="10"
-                   Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/monster_strong_point.png"/>
-            <Image Margin="10"
+            <Image Margin="5,20,5,0"
                    Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/weakness_icon.png"/>
-            <Separator Height="40" 
-                       Width="40"
-                       Visibility="Hidden"/>
-        </StackPanel>
+            <Image Margin="5,20,5,0"
+                   Source="pack://application:,,,/Common/Resources/Assets/ControlIcons/monster_strong_point.png"/>
 
-        <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Grid.RowSpan="2"
-                    Background="{StaticResource main_theme_color}"
-                    Margin="1">
-
-            <TextBlock Text="Name: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       Height="30"
-                       TextAlignment="Right"/>
-
-            <TextBlock Text="Type: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       Height="30"
-                       TextAlignment="Right" 
-                       Margin="0,18,0,0"/>
-
-            <TextBlock Text="Element: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       Height="30"
-                       TextAlignment="Right" 
-                       Margin="0,18,0,0"/>
-
-            <TextBlock Text="Strong point: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       Height="30"
-                       TextAlignment="Right" 
-                       Margin="0,18,0,0"/>
-
-            <TextBlock Text="Weak point: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       Height="30"
-                       TextAlignment="Right" 
-                       Margin="0,18,0,0"/>
-
-            <TextBlock Text="Game: "
-                       Background="{StaticResource main_theme_color}"
-                       Style="{StaticResource main_textblocks_style}"
-                       TextAlignment="Right" 
-                       Margin="0,18,0,0" 
-                       Height="30"/>
 
         </StackPanel>
 
-        <StackPanel Grid.Column="2"
+        <StackPanel Grid.Column="1"
+                    Grid.ColumnSpan="2"
                     Grid.Row="1"
-                    Grid.RowSpan="3"
                     Background="{StaticResource main_theme_color}"
                     Margin="1,1,1,1">
 
-            <TextBox Text="{Binding CreatureName}"
-                     Style="{StaticResource main_textboxes_style}"
+            <placeHolderText:PlaceHolderTextBox
+                     x:Name="name_field"
+                     PlaceHolder="Name"
                      Background="{StaticResource main_theme_color}"
-                     Height="30"
-                     MaxLength="28"/>
+                     Height="38"
+                     MaxLength="28" 
+                     Margin="0,12,0,0"/>
 
-            <TextBox Text="{Binding CreatureType}"
+            <placeHolderText:PlaceHolderTextBox
+                     x:Name="type_field"
+                     Text="{Binding CreatureType}"
                      Background="{StaticResource main_theme_color}"
-                     Style="{StaticResource main_textboxes_style}"
-                     Height="30" 
-                     Margin="0,18,0,0"/>
+                     PlaceHolder="Type"
+                     Height="38" 
+                     Margin="0,20,0,0"/>
 
-            <TextBox Text="{Binding CreatureElement}"
-                     Background="{StaticResource main_theme_color}"
-                     Style="{StaticResource main_textboxes_style}"
-                     Height="30" 
-                     Margin="0,18,0,0"/>
-
-            <TextBox Text="{Binding StrongPoint}"
-                     Background="{StaticResource main_theme_color}"
-                     Style="{StaticResource main_textboxes_style}"
-                     Height="30" 
-                     Margin="0,18,0,0"/>
-
-            <TextBox Text="{Binding WeakPoint}"
-                         Background="{StaticResource main_theme_color}"
-                         Style="{StaticResource main_textboxes_style}"
-                         Height="30" 
-                         Margin="0,18,0,0"/>
-
-            <Expander x:Name="game_selector"
+            <Expander x:Name="element_selector"
+                      ExpandDirection="Down"
+                      FontSize="12"
                       Grid.Column="2"
-                      Grid.Row="2"
+                      Grid.Row="1"
                       Grid.RowSpan="3"
-                      Margin="0,18,0,0"
-                      Background="{StaticResource main_theme_color}"
-                      DataContext="{StaticResource creature_view_model}"
-                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                      ScrollViewer.VerticalScrollBarVisibility="Hidden" Panel.ZIndex="3">
+                      Background="{StaticResource main_theme_color}" 
+                      Margin="0,20,100,0" >
 
-                <ListView Background="{StaticResource main_theme_color}"
-                              BorderBrush="Transparent"
-                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                              ItemsSource="{Binding GameViewModel.Games}"
-                              SelectedValue="{Binding SelectedGame}" 
-                              IsSynchronizedWithCurrentItem="True">
+                <Expander.Header>
+                    <TextBlock x:Name="element_selector_header"
+                               Text="Element"
+                               Style="{StaticResource main_textblocks_style}"/>
+                </Expander.Header>
+
+                <ListView x:Name="element_list"
+                          Background="{StaticResource main_theme_color}"
+                          BorderBrush="Transparent"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          ItemsSource="{Binding Elements}"
+                          SelectedValue="{Binding CreatureElement}"
+                          IsSynchronizedWithCurrentItem="True" 
+                          SelectionChanged="OnElementChanged">
 
                     <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{StaticResource main_buttons_style}"
-                                        Background="{StaticResource main_theme_color}"
-                                        Tag="{StaticResource creature_creation_buttons_tag}"
-                                        Content="{Binding Name}"
-                                        />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
 
+                        <DataTemplate>
+                            <Border x:Name="expander_option"
+                                    CornerRadius="10">
+
+                                <TextBlock Text="{Binding}"
+                                           Style="{StaticResource main_textblocks_style}"
+                                           TextAlignment="Center">
+                                </TextBlock>
+                            </Border>
+
+                            <DataTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="expander_option"
+                                            Property="Background"
+                                            Value="{StaticResource shadowed_buttons_highlight_color}"/>
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+
+                    </ListView.ItemTemplate>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
             </Expander>
+
+            <placeHolderText:PlaceHolderTextBox
+                     x:Name="weak_point_field"
+                     Text="{Binding WeakPoint}"
+                     Background="{StaticResource main_theme_color}"
+                     PlaceHolder="Weak point"
+                     Height="38" 
+                     Margin="0,35,0,0"/>
+
+            <placeHolderText:PlaceHolderTextBox 
+                     x:Name="strong_point_field"
+                     Text="{Binding StrongPoint}"
+                     Background="{StaticResource main_theme_color}"
+                     PlaceHolder="Strong point"
+                     Height="38" 
+                     Margin="0,20,0,0"/>
+
         </StackPanel>
 
         <TextBlock Grid.Row="1"
@@ -223,97 +207,142 @@
                    Background="{StaticResource main_theme_color}"
                    Margin="1,1,1,213"/>
 
-        <TextBox Text="{Binding Description}"
+        <TextBox x:Name="description_field"
+                 Text="{Binding Description}"
                  Grid.Row="1"
                  Grid.Column="3"
                  Grid.RowSpan="1"
                  Style="{StaticResource main_textboxes_style}"
                  Background="{StaticResource main_theme_color}"
-                 Margin="1,39,1,1"/>
+                 Margin="1,27,1,1"/>
 
-        <Border Grid.Row="3"
-                    Grid.ColumnSpan="2"
-                    Margin="1"
-                    Background="{StaticResource main_theme_color}">
+        <Grid Grid.Row="3"
+              Grid.ColumnSpan="2"
+              Margin="1"
+              Background="{StaticResource main_theme_color}">
 
-            <sharedControls:RadiusButtonModel x:Name="add_creature_image_buton"
-                                                  Tag="{StaticResource creature_creation_buttons_tag}"
-                                                  Content="Add image"
-                                                  Background="Transparent"
-                                                  Margin="16,3,16,3"
-                                                  Command="{Binding AddCreatureImagePathCommand}"/>
-        </Border>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="110"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
+            <sharedControls:RadiusButtonModel
+                x:Name="add_creature_image_button"
+                Tag="{StaticResource creature_creation_buttons_tag}"
+                Content="Add image"
+                Background="Transparent"
+                Command="{Binding AddCreatureImagePathCommand}" 
+                Margin="20,6,20,6"/>
 
-        <StackPanel Grid.Row="4"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Background="{StaticResource main_theme_color}"
-                    Margin="1">
+            <Border Grid.Row="1"
+                    BorderBrush="{StaticResource main_window_borders_color}"
+                    Background="{StaticResource main_window_background}"
+                    BorderThickness="2"
+                    CornerRadius="5" 
+                    Margin="4,0,4,0">
 
-            <sharedControls:RadiusButtonModel Content="Add image"
-                                              Tag="{StaticResource add_image_button_tag}"
-                                              Background="{StaticResource main_theme_color}"
-                                              Command="{Binding AddCreatureImagePathCommand}"/>
+                <Image x:Name="new_creature_image"
+                       Source="{Binding CreatureImageIconPath, 
+                                Converter={StaticResource image_path_converter}}"
+                       Margin="3" 
+                       MouseEnter="OnImageMouseEnter" 
+                       MouseDown="OnCreatureImageMouseDown"/>
+            </Border>
 
-            <Separator Height="5"
-                       Visibility="Hidden"/>
+            <sharedControls:RadiusButtonModel
+                x:Name="add_creature_button"
+                Tag="{StaticResource creature_creation_buttons_tag}"
+                Background="{StaticResource main_theme_color}"
+                Content="Save"
+                Grid.Row="2" 
+                Margin="32,10,32,89"
+                Click="OnAddCreatureClick"/>
 
-            <TextBlock Style="{StaticResource main_textblocks_style}"
-                       Background="Transparent"
-                       Text="Current image path:"
-                       Padding="5"/>
+            <sharedControls:RadiusButtonModel
+                x:Name="add_creature_yes_button"
+                Grid.Row="2"
+                Tag="{StaticResource creature_creation_buttons_tag}"
+                Background="{StaticResource main_theme_color}"
+                Content="Yes" 
+                Command="{Binding AddNewCreatureCommand}"
+                Visibility="Hidden"
+                Margin="19,32,67,67"
+                Click="OnAddCreatureYesClick"/>
 
-            <Separator Height="2"
-                       Visibility="Hidden"/>
+            <sharedControls:RadiusButtonModel 
+                x:Name="add_creature_no_button"
+                Grid.Row="2"
+                Tag="{StaticResource creature_creation_buttons_tag}"
+                Background="{StaticResource main_theme_color}"
+                Content="No" 
+                Visibility="Hidden"
+                Margin="67,32,19,67"
+                Click="OnAddCreatureNoButton"/>
+        </Grid>
 
-            <TextBox Text="{Binding CreatureImageIconPath}"
-                         Style="{StaticResource main_textboxes_style}"
-                         Background="{StaticResource secondary_color}"
-                         Margin="5,5,5,65"
-                         TextWrapping="NoWrap"/>
-        </StackPanel>
+        <Grid Grid.Column="2"
+              Grid.Row="2"
+              Background="{StaticResource main_theme_color}"
+              Margin="1">
 
-        <Border Grid.Row="3"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                BorderBrush="{StaticResource main_window_borders_color}"
-                Background="{StaticResource main_window_background}"
-                BorderThickness="2"
-                CornerRadius="5"
-                Margin="5,85,5,50">
+            <Expander x:Name="creature_game_selector"
+                      ExpandDirection="Down"
+                      FontSize="12"
+                      Background="{StaticResource main_theme_color}" 
+                      Margin="2,0,2,0">
 
-            <Image Source="{Binding CreatureImageIconPath, 
-                           Converter={StaticResource image_path_converter}}"
-                   Margin="3"/>
-        </Border>
+                <Expander.Header>
+                    <TextBlock Text="Select game"
+                               Style="{StaticResource main_textblocks_style}"/>
+                </Expander.Header>
 
-        <sharedControls:RadiusButtonModel
-                        Tag="{StaticResource creature_creation_buttons_tag}"
-                        Background="{StaticResource main_theme_color}"
-                        Content="Save"
-                        Margin="42,191,42,25" 
-                        Height="20"
-                        Command="{Binding AddNewCreatureCommand}" 
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Grid.ColumnSpan="2"/>
+                <ListView x:Name="game_list"
+                          Background="{StaticResource main_theme_color}"
+                          BorderBrush="Transparent"
+                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                          ItemsSource="{Binding GameViewModel.Games}"
+                          SelectedValue="{Binding SelectedGame, Mode=OneWayToSource}"
+                          IsSynchronizedWithCurrentItem="True">
 
-        <sharedControls:RadiusButtonModel 
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        Tag="{StaticResource creature_creation_buttons_tag}"
-                        Background="{StaticResource main_theme_color}"
-                        Content="Yes"
-                        Margin="10,211,1,5"/>
+                    <ListView.ItemTemplate>
 
-        <sharedControls:RadiusButtonModel 
-                        Grid.Column="1"
-                        Grid.Row="3"
-                        Tag="{StaticResource creature_creation_buttons_tag}"
-                        Background="{StaticResource main_theme_color}"
-                        Content="No" 
-                        Margin="26,211,10,5"/>
+                        <DataTemplate>
+                            <Border x:Name="expander_option"
+                                    CornerRadius="10">
+                                <TextBlock x:Name="game_name"
+                                           Text="{Binding Name}"
+                                           MaxWidth="115"
+                                           Style="{StaticResource main_textblocks_style}"
+                                           TextAlignment="Center"
+                                           TextWrapping="Wrap"/>
+                            </Border>
+
+                            <DataTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="expander_option"
+                                            Property="Background"
+                                            Value="{StaticResource shadowed_buttons_highlight_color}"/>
+                                </Trigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+
+                    </ListView.ItemTemplate>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Expander>
+        </Grid>
 
         <Grid Grid.Row="2"
               Grid.Column="3"
@@ -322,83 +351,63 @@
               Margin="1">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="110"/>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="110"/>
-                <ColumnDefinition Width="50"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <Border BorderBrush="{StaticResource main_window_borders_color}"
                     BorderThickness="2"
                     CornerRadius="5"
                     Background="{StaticResource main_window_background}"
-                    Margin="3">
+                    Margin="3,3,12,7">
 
-                <Image Source="{Binding SelectedGame.ImageIcon}"/>
+                <Image x:Name="creature_game_image"
+                       Source="{Binding SelectedGame.ImageIcon}"
+                       MouseEnter="OnImageMouseEnter"
+                       MouseDown="OnCreatureImageMouseDown"/>
             </Border>
 
-            <TextBlock Grid.Column="1"
-                       Text="Name :"
-                       Style="{StaticResource main_textblocks_style}" Margin="5,89,0,1"/>
-
-            <TextBlock Grid.Column="0"
-                       Grid.Row="1"
-                       Text="Date registered :"
-                       Style="{StaticResource main_textblocks_style}" Margin="5,10,5,0"/>
-
-            <TextBlock Grid.Column="0"
-                       Grid.Row="2"
-                       Grid.ColumnSpan="2"
-                       Text="Registered creatures :"
-                       Style="{StaticResource main_textblocks_style}" Margin="5,10,32,0"/>
-
-            <TextBlock Grid.Column="0"
-                       Grid.Row="3"
-                       Text="Genre :"
-                       Style="{StaticResource main_textblocks_style}" 
-                       Margin="5,10,62,74"/>
-
-            <TextBlock Grid.Column="2"
+            <TextBlock Grid.Row="1"
                        Text="{Binding SelectedGame.Name}"
+                       Style="{StaticResource main_textblocks_style}"
+                       Margin="5,10,5,0"/>
+
+            <TextBlock Grid.Row="2"
+                       Text="{Binding SelectedGame.DateRegistered, Converter={StaticResource game_date_converter}}"
                        Style="{StaticResource main_textblocks_style}" 
-                       Margin="0,90,0,0"  
-                       Width="78"/>
+                       Margin="5,10,5,0"/>
+
+            <TextBlock Grid.Row="3"
+                       Text="Registered creatures :"
+                       Style="{StaticResource main_textblocks_style}" 
+                       Margin="5,10,0,0"/>
+
+            <TextBlock Grid.Row="4"
+                       Text="{Binding SelectedGame.Genre}"
+                       Style="{StaticResource main_textblocks_style}"
+                       Margin="5,10,32,4"/>
 
             <TextBlock Grid.Column="1"
-                       Grid.Row="1"
-                       Grid.ColumnSpan="2"
-                       Text="{Binding SelectedGame.DateRegistered, 
-                             Converter={StaticResource image_path_converter}}"
-                       Style="{StaticResource main_textblocks_style}" 
-                       Margin="0,10,5,0"/>
-
-            <TextBlock Grid.Column="1"
-                       Grid.Row="2"
-                       Grid.ColumnSpan="2"
+                       Grid.Row="3"
                        Text="{Binding SelectedGame.RegisteredCreatures}"
                        Style="{StaticResource main_textblocks_style}" 
-                       Margin="23,10,5,0"/>
-
-            <TextBlock Grid.Column="0"
-                       Grid.Row="3"
-                       Grid.ColumnSpan="3"
-                       Text="{Binding SelectedGame.Genre}"
-                       Style="{StaticResource main_textblocks_style}" 
-                       Margin="53,10,5,74"/>
+                       Margin="0,10,20,0"/>
         </Grid>
 
         <Grid Grid.Column="4"
               Grid.RowSpan="4">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="280"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -418,10 +427,12 @@
 
                 <Image Source="pack://Application:,,,/Common/Resources/Assets/ControlIcons/search_icon.png" Margin="6,7,6,5"/>
 
-                <placeHolderText:PlaceHolderTextBox Grid.Column="1"
-                                                    PlaceHolder="Search"
-                                                    Background="{StaticResource main_theme_color}"
-                                                    Margin="0,7,2,5">
+                <placeHolderText:PlaceHolderTextBox
+                    x:Name="creature_search_bar"
+                    Grid.Column="1"
+                    PlaceHolder="Search"
+                    Background="{StaticResource main_theme_color}"
+                    Margin="0,7,2,5">
 
                     <TextBox.Text>
                         <Binding Path="SearchCreatureName"
@@ -432,81 +443,144 @@
                         <KeyBinding Key="Enter"
                                     Command="{Binding SearchCreatureByNameCommand}"
                                     CommandParameter="{Binding SearchCreatureName}"/>
-                        </TextBox.InputBindings>
-                </placeHolderText:PlaceHolderTextBox>    
+                    </TextBox.InputBindings>
+                </placeHolderText:PlaceHolderTextBox>
             </Grid>
-            
 
-            <ListView Grid.Row="2"
-                      DataContext="{StaticResource creature_view_model}"
-                      ItemsSource="{Binding Creatures}"
-                      SelectedValue="{Binding SelectedCreature}"
-                      IsSynchronizedWithCurrentItem="True"
-                      Background="{StaticResource main_theme_color}"
+
+            <ListView x:Name="game_page_creatures_list"
+                      Grid.Row="2"
                       BorderBrush="Transparent"
-                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+                      Background="{StaticResource main_theme_color}"
+                      ItemsSource="{Binding Creatures}"
+                      SelectedValue="{Binding SelectedCreature}" 
+                      IsSynchronizedWithCurrentItem="True"
+                      VirtualizingPanel.ScrollUnit="Pixel"
+                      Margin="0,0,0,1">
 
-                <ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
 
-                    <DataTemplate>
-                        <Grid Background="Transparent"
-                              Height="40">
+                                    <Grid Background="Transparent"
+                                          Height="90"
+                                          HorizontalAlignment="Left"
+                                          Width="348"
+                                          Margin="5,0,0,0">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="4*"/>
-                                <ColumnDefinition Width="4*"/>
-                            </Grid.ColumnDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="2*"/>
-                                <RowDefinition Height="2*"/>
-                            </Grid.RowDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
 
-                            <Image Grid.RowSpan="2"
-                                   Height="90"
-                                   Width="100"
-                                   Source="{Binding ImageIcon}"/>
+                                        <Border x:Name="creature_image_border"
+                                                Grid.RowSpan="2"
+                                                HorizontalAlignment="Right"
+                                                BorderThickness="10"
+                                                BorderBrush="Transparent"
+                                                CornerRadius="3"
+                                                Margin="3,3,-6,0" 
+                                                Panel.ZIndex="2">
 
-                            <TextBlock Grid.Column="1"
-                                       Style="{StaticResource main_textblocks_style}"
-                                       Text="{Binding Name}"
-                                       Margin="3"/>
+                                            <Border x:Name="creature_image_container"
+                                                    BorderThickness="2"
+                                                    Background="{StaticResource main_window_background}"
+                                                    BorderBrush="{StaticResource main_window_borders_color}"
+                                                    CornerRadius="3"
+                                                    Margin="-3,-3,-3,-3">
 
-                            <TextBlock Grid.Column="2"
-                                       Style="{StaticResource main_textblocks_style}"
-                                       Text="Type : "
-                                       Margin="3"/>
+                                                <Image Source="{Binding ImageIcon}"/>
+                                            </Border>
+                                        </Border >
 
-                            <TextBlock Grid.Column="3"
-                                       Style="{StaticResource main_textblocks_style}"
-                                       Text="{Binding Type}"
-                                       Margin="3"/>
+                                        <Border x:Name="area_fill"
+                                                Background="Transparent"
+                                                CornerRadius="20"
+                                                Grid.RowSpan="2"
+                                                Margin="100,45,-8,38"/>
 
-                            <TextBlock Grid.Column="1"
-                                       Grid.Row="1"
-                                       Style="{StaticResource main_textblocks_style}"
-                                       Text="Element : "
-                                       Margin="3"/>
+                                        <Border x:Name="creature_data_border"
+                                                Grid.Column="1"
+                                                Grid.ColumnSpan="3"
+                                                Background="Transparent"
+                                                CornerRadius="5"
+                                                Margin="-5,3,0,0">
 
-                            <TextBlock Grid.Column="2"
-                                       Grid.Row="1"
-                                       Text="{Binding Element}"
-                                       Style="{StaticResource main_textblocks_style}"
-                                       Margin="3"/>
+                                            <Grid Grid.ColumnSpan="3">
 
-                            <Button Grid.Column="3"
-                                Grid.Row="1"
-                                Content="delete"
-                                Margin="5"
-                                Command="{Binding Path=DataContext.DeleteCreatureCommand, 
-                                          RelativeSource={RelativeSource AncestorType=ListView}}"
-                                CommandParameter="{Binding Id}"/>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="80"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
 
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
+                                                <TextBlock Style="{StaticResource main_textblocks_style}"
+                                                           Text="Name"
+                                                           Margin="20,20,0,5"/>
+
+                                                <TextBlock Grid.Column="1"
+                                                           Style="{StaticResource main_textblocks_style}"
+                                                           Text="Type"
+                                                           Margin="20,20,0,5"/>
+
+                                                <TextBlock Grid.Column="2"
+                                                           Style="{StaticResource main_textblocks_style}"
+                                                           Text="Element"
+                                                           Margin="20,20,0,5"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Grid.Row="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding Name, Mode=OneTime}"
+                                                   Margin="17,10,5,15"/>
+
+                                        <TextBlock Grid.Column="2"
+                                                   Grid.Row="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding Type}"
+                                                   Margin="17,10,20,15"/>
+
+                                        <TextBlock Grid.Column="3"
+                                                   Grid.Row="1"
+                                                   Style="{StaticResource main_textblocks_style}"
+                                                   Text="{Binding Element}"
+                                                   Margin="17,10,20,15"/>
+                                    </Grid>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="true">
+
+                                            <Setter TargetName="creature_image_container"
+                                                    Property="BorderBrush"
+                                                    Value="{StaticResource main_window_background}"/>
+                                            <Setter TargetName="creature_image_border" 
+                                                    Property="BorderBrush"
+                                                    Value="{StaticResource main_window_borders_color}"/>
+                                            <Setter TargetName="creature_data_border"
+                                                    Property="Background"
+                                                    Value="{StaticResource list_view_item_gradient}"/>
+                                            <Setter TargetName="area_fill"
+                                                    Property="Background"
+                                                    Value="{StaticResource main_window_borders_color}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
 
             <Grid Grid.Row="1"
@@ -526,54 +600,117 @@
                 </Grid.RowDefinitions>
 
                 <placeHolderText:PlaceHolderTextBox
+                    x:Name="edit_name_field"
                     Text="{Binding SelectedCreature.Name}"
                     PlaceHolder="Name"
                     TextAlignment="Left" 
-                    Margin="10,5,0,5"/>
+                    Margin="10,5,0,5"
+                    KeyDown="OnEditNameEnterKeyDown"
+                    GotKeyboardFocus="OnEditNameFieldFocus" 
+                    LostKeyboardFocus="OnEditNameFieldLostFocus"/>
 
                 <placeHolderText:PlaceHolderTextBox
+                    x:Name="edit_type_field"
                     Grid.Row="1"
                     Text="{Binding SelectedCreature.Type}"
                     PlaceHolder="Type"
                     TextAlignment="Left" 
-                    Margin="10,5,0,5"/>
+                    Margin="10,5,0,5"
+                    KeyDown="OnEditTypeEnterKeyDown"
+                    GotKeyboardFocus="OnEditTypeFieldFocus" LostKeyboardFocus="OnEditTypeFieldLostFocus"/>
+
+                <Expander x:Name="edit_element_selector"
+                          Grid.Row="2"
+                          Grid.RowSpan="4"
+                          FontSize="12"
+                          Background="Transparent" 
+                          Margin="0,0,180,0"
+                          Expanded="OnEditElementsExpanded"
+                          Collapsed="OnEditElementsCollapsed">
+
+                    <Expander.Header>
+                        <TextBlock x:Name="edit_element_selector_header"
+                                   Text="Element"
+                                   Style="{StaticResource main_textblocks_style}"/>
+                    </Expander.Header>
+
+                    <ListView x:Name="edit_element_list"
+                              Background="Transparent"
+                              BorderBrush="Transparent"
+                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                              ItemsSource="{Binding EditElements}"
+                              SelectedValue="{Binding CreatureName}"
+                              IsSynchronizedWithCurrentItem="True" 
+                              SelectionChanged="OnElementEdited">
+
+                        <ListView.ItemTemplate>
+
+                            <DataTemplate>
+                                <Border x:Name="edit_expander_option"
+                                        CornerRadius="10">
+
+                                    <TextBlock Text="{Binding}"
+                                               Style="{StaticResource main_textblocks_style}"
+                                               TextAlignment="Center">
+                                    </TextBlock>
+                                </Border>
+
+                                <DataTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="true">
+                                        <Setter TargetName="edit_expander_option"
+                                                Property="Background"
+                                                Value="{StaticResource shadowed_buttons_highlight_color}"/>
+                                    </Trigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+
+                        </ListView.ItemTemplate>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Expander>
 
                 <placeHolderText:PlaceHolderTextBox
-                    Grid.Row="2"
-                    Text="{Binding SelectedCreature.Element}"
-                    PlaceHolder="Element"
+                    x:Name="edit_strong_point_field"
+                    Grid.Row="3"
+                    Text="{Binding SelectedCreature.StrongPoint}"
+                    PlaceHolder="Strong point"
+                    Background="{StaticResource main_theme_color}"
                     TextAlignment="Left"
-                    Margin="10,5,0,5"/>
+                    Margin="10,5,0,5"
+                    GotKeyboardFocus="OnEditSPFieldFocus" 
+                    KeyDown="OnEditSPEnterKeyDown" 
+                    LostKeyboardFocus="OnEditSPFieldLostFocus"/>
 
-                <TextBlock Grid.Row="3"
-                           Text="Strong point :"
-                           Style="{StaticResource main_textblocks_style}" 
-                           Margin="15,5,190,5"/>
-
-                <TextBox Grid.Row="3"
-                         Text="{Binding SelectedCreature.StrongPoint}"
-                         Style="{StaticResource main_textboxes_style}"
-                         Background="{StaticResource main_theme_color}"
-                         TextAlignment="Left"
-                         Margin="100,5,0,5"/>
-
-                <TextBlock Grid.Row="4"
-                           Text="Weak point :"
-                           Style="{StaticResource main_textblocks_style}"
-                           Margin="15,5,195,5"/>
-
-                <TextBox Grid.Row="4"
-                         Text="{Binding SelectedCreature.WeakPoint}"
-                         Style="{StaticResource main_textboxes_style}"
-                         Background="{StaticResource main_theme_color}"
-                         TextAlignment="Left"
-                         Margin="97,5,0,5"/>
+                <placeHolderText:PlaceHolderTextBox
+                    x:Name="edit_weak_point_field"
+                    Grid.Row="4"
+                    Text="{Binding SelectedCreature.WeakPoint}"
+                    PlaceHolder="Weak point"
+                    Background="{StaticResource main_theme_color}"
+                    TextAlignment="Left"
+                    Margin="10,5,0,5"
+                    GotKeyboardFocus="OnEditWPFieldFocus" 
+                    KeyDown="OnEditWPEnterKeyDown" 
+                    LostKeyboardFocus="OnEditWPFieldLostFocus"/>
 
                 <sharedControls:RadiusButtonModel
+                    x:Name="change_creature_image_button"
                     Grid.Row="5"
                     Content="Change image" 
                     Margin="95,5,95,185"
-                    Command="{Binding ChangeCreatureImageIcon}"/>
+                    Command="{Binding ChangeCreatureImageIconCommand}" 
+                    Click="OnEditCreatureImageClick"/>
 
                 <Border Grid.Row="5"
                         Background="{StaticResource main_window_background}"
@@ -582,30 +719,94 @@
                         CornerRadius="5"
                         Margin="20,40,20,0">
 
-                    <Image Source="{Binding SelectedCreature.ImageIcon}"/>
+                    <Image x:Name="creature_image"
+                           Source="{Binding SelectedCreature.ImageIcon}"
+                           MouseEnter="OnImageMouseEnter"
+                           MouseDown="OnCreatureImageMouseDown"/>
                 </Border>
 
                 <TextBlock Grid.Row="6"
                            Text="Description"
                            Style="{StaticResource main_textblocks_style}" 
-                           Margin="110,15,109,135"/>
+                           Margin="105,15,105,135"/>
 
-                <TextBox Grid.Row="6"
+                <TextBox x:Name="edit_description_field"
+                         Grid.Row="6"
                          Text="{Binding SelectedCreature.Description}"
                          Style="{StaticResource main_textboxes_style}"
                          Background="{StaticResource main_theme_color}" 
-                         Margin="10,40,10,35"/>
+                         Margin="10,40,10,60"
+                         GotKeyboardFocus="OnEditDescriptionFieldFocus" 
+                         KeyDown="OnEditDescEnterKeyDown" LostKeyboardFocus="OnEditDescriptionFieldLostFocus"/>
 
                 <sharedControls:RadiusButtonModel
+                    x:Name="save_changes_button"
                     Grid.Row="6"
-                    Content="Save changes" 
-                    Margin="95,139,95,5"
-                    Command="{Binding SaveChangesCommand}"/>
+                    Content="Save changes"
+                    Visibility="Hidden"
+                    Margin="95,110,95,49"
+                    Click="OnSaveChangesClick"/>
+
+                <sharedControls:RadiusButtonModel
+                    x:Name="save_changes_yes_button"
+                    Grid.Row="6"
+                    Content="Yes"
+                    Command="{Binding SaveChangesCommand}"
+                    Visibility="Hidden"
+                    Margin="79,130,162,29"
+                    Click="OnSaveChangesYesClick"/>
+
+                <sharedControls:RadiusButtonModel
+                    x:Name="confirmation_no_button"
+                    Grid.Row="6"
+                    Content="No"
+                    Visibility="Hidden"
+                    Margin="158,130,83,29"
+                    Click="OnConfirmationNoClick"/>
+
+                <sharedControls:RadiusButtonModel
+                    x:Name="cancel_changes_button"
+                    Grid.Row="6"
+                    Content="Cancel"
+                    Visibility="Hidden"
+                    Click="OnCancelChangesClick" 
+                    Margin="104,131,104,28"/>
+
+                <sharedControls:RadiusButtonModel
+                    x:Name="delete_creature_button"
+                    Grid.Row="6"
+                    Content="Delete"
+                    Margin="110,110,110,49"
+                    Click="OnDeleteCreatureClick"/>
+
+                <sharedControls:RadiusButtonModel
+                    x:Name="delete_creature_yes_button"
+                    Grid.Row="6"
+                    Content="Yes"
+                    Visibility="Hidden"
+                    Margin="79,130,162,29"
+                    Click="OnDeleteCreatureYesClick"/>
+
+                <TextBlock x:Name="empty_field_warning"
+                           Grid.Row="6"
+                           Style="{StaticResource main_textblocks_style}"
+                           Foreground="{StaticResource ErrorColor}"
+                           TextAlignment="Center"
+                           Visibility="Hidden" 
+                           Margin="20,149,20,0"/>
+
+                <TextBlock x:Name="confirmation_prompt"
+                           Grid.Row="6"
+                           Text="Are you sure"
+                           TextAlignment="Center"
+                           Style="{StaticResource main_textblocks_style}"
+                           Visibility="Hidden"
+                           Margin="95,103,95,45"/>
             </Grid>
 
             <Grid  Grid.ColumnSpan="2"
                    Background="{StaticResource main_theme_color}"
-                   Margin="1">
+                   Margin="1,0,1,1">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -613,15 +814,25 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0"
-                           Text="Creatures list"
+                           Text="Creatures"
                            Style="{StaticResource main_textblocks_style}"
-                           TextAlignment="Center" Margin="92,7,92,5"/>
+                           TextAlignment="Center" 
+                           Margin="92,7,92,5"/>
 
                 <TextBlock Grid.Column="1"
                            Text="Edit"
                            Style="{StaticResource main_textblocks_style}"
-                           TextAlignment="Center" Margin="92,7,92,5"/>
+                           TextAlignment="Center" 
+                           Margin="92,7,92,5"/>
             </Grid>
+
+            <Border x:Name="creatures_list_view_input_blocker"
+                    Grid.Row="2"
+                    Background="{StaticResource main_font_color}"
+                    Opacity="0.05"
+                    Margin="1"
+                    Visibility="Hidden"/>
+            
         </Grid>
     </Grid>
 </Page>

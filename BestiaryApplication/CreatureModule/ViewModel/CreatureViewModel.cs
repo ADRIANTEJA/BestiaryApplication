@@ -2,7 +2,9 @@
 using BestiaryApplication.CreatureModule.DataAccess;
 using BestiaryApplication.CreatureModule.Model;
 using BestiaryApplication.GamesModule.Model;
+using BestiaryApplication.GamesModule.Repository;
 using BestiaryApplication.GamesModule.ViewModel;
+using BestiaryApplication.MainModule.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +22,20 @@ namespace BestiaryApplication.CreatureModule.ViewModel
     public class CreatureViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private readonly string[] elements = new string[6] { "Water", "Earth", "Fire", "Air", "Light", "Darkness" };
+
+        public string[] Elements
+        {
+            get { return elements; }
+        }
+
+        private readonly string[] editElements = new string[6] { "Water", "Earth", "Fire", "Air", "Light", "Darkness" };
+
+        public string[] EditElements
+        {
+            get { return editElements; }
+        }
 
         private ObservableCollection<Creature> creatures;
 
@@ -59,9 +75,9 @@ namespace BestiaryApplication.CreatureModule.ViewModel
             }
         }
 
-        private Creature.element creatureElement;
+        private string creatureElement;
 
-        public Creature.element CreatureElement
+        public string CreatureElement
         {
             get { return creatureElement; }
             set 
@@ -171,7 +187,7 @@ namespace BestiaryApplication.CreatureModule.ViewModel
 
         private ICommand _changeCreatureImageCommand;
 
-        public ICommand ChangeCreatureImageIcon
+        public ICommand ChangeCreatureImageIconCommand
         {
             get 
             { 
@@ -182,7 +198,6 @@ namespace BestiaryApplication.CreatureModule.ViewModel
                 return _changeCreatureImageCommand; 
             }
         }
-
 
         private ICommand _addNewCreatureCommand;
 
@@ -254,6 +269,20 @@ namespace BestiaryApplication.CreatureModule.ViewModel
             }
         }
 
+        private ICommand _insertLastConsultedCreatureCommand;
+
+        public ICommand InsertLastConsultedCreatureCommand
+        {
+            get
+            {
+                if (_insertLastConsultedCreatureCommand == null)
+                {
+                    _insertLastConsultedCreatureCommand = new DelegateCommand(InsertLastConsultedCreature);
+                }
+                return _insertLastConsultedCreatureCommand;
+            }
+        }
+
         public CreatureViewModel() 
         {
             Creatures = new ObservableCollection<Creature>(CreatureDataAccess.QueryAllCreatures());
@@ -268,11 +297,7 @@ namespace BestiaryApplication.CreatureModule.ViewModel
             {
                 CreatureImageIconPath = GeneralMethods.GetImagePath();
             }
-            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-            {
-                MessageBox.Show("An error has occured try again");
-            }
-            catch (Exception e) when (e is ArgumentException) {}
+            catch {}
         }
 
         private void ChangeCreatureImage(object parameter)
@@ -281,11 +306,8 @@ namespace BestiaryApplication.CreatureModule.ViewModel
             {
                 SelectedCreature.ImageIcon = File.ReadAllBytes(GeneralMethods.GetImagePath());
             }
-            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-            {
-                MessageBox.Show("An error has occured try again");
-            }
-            catch (Exception e) when (e is ArgumentException) {}
+            catch {}
+            OnPropertyChanged(nameof(SelectedCreature));
         }
 
         private void AddNewCreature(object parameter)
@@ -304,6 +326,7 @@ namespace BestiaryApplication.CreatureModule.ViewModel
             
             creatures.Add(creature);
             CreatureDataAccess.InsertCreature(creature);
+            GameRespository.UpdateGameRegisteredCreatures(creature.GameId);
         }
 
         private bool CanAddNewCreature(object parameter)
@@ -313,7 +336,7 @@ namespace BestiaryApplication.CreatureModule.ViewModel
                 || string.IsNullOrEmpty(StrongPoint)
                 || string.IsNullOrEmpty(WeakPoint)
                 || string.IsNullOrEmpty(Description)
-                || GameViewModel.Games.Count == 0) { return false; }
+                || GameViewModel!.Games.Count == 0) { return false; }
 
             return true;
         }
@@ -359,7 +382,15 @@ namespace BestiaryApplication.CreatureModule.ViewModel
                 || string.IsNullOrEmpty(SelectedCreature.StrongPoint)
                 || string.IsNullOrEmpty(SelectedCreature.WeakPoint)
                 || string.IsNullOrEmpty(SelectedCreature.Description)) return false; 
+
             return true;
+        }
+
+        private void InsertLastConsultedCreature(object parameter)
+        {
+            var creature = (Creature)parameter;
+            MainDataAccess.DeleteLastConsultedCreature();
+            MainDataAccess.InsertLastConsultedCreature(creature);
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

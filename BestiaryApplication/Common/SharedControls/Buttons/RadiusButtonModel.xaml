@@ -53,7 +53,7 @@
     </Button.Template>
 
     <Button.Style>
-        <Style TargetType="{x:Type Button}">
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource main_buttons_style}">
             <Setter Property="Tag" Value="{DynamicResource main_buttons_tag}"/>
             <Setter Property="Background" Value="{DynamicResource main_theme_color}"/>
         </Style>

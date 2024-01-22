@@ -18,10 +18,11 @@ namespace BestiaryApplication.GamesModule.Repository
                 connection.Open();
                 var command = connection.CreateCommand(); 
 
-                command.CommandText = @"INSERT INTO game (name, registeredCreatures, dateRegistered, imageIcon)
-                                        VALUES ($name, $registeredCreatures, $dateRegistered, $imageIcon)";
+                command.CommandText = @"INSERT INTO games (name, genre, registeredCreatures, dateRegistered, imageIcon)
+                                        VALUES ($name, $genre, $registeredCreatures, $dateRegistered, $imageIcon)";
 
                 command.Parameters.Add(new SqliteParameter("$name", game.Name));
+                command.Parameters.Add(new SqliteParameter("$genre", game.Genre));
                 command.Parameters.Add(new SqliteParameter("$registeredCreatures", game.RegisteredCreatures));
                 command.Parameters.Add(new SqliteParameter("$dateRegistered", game.DateRegistered));
                 command.Parameters.Add(new SqliteParameter("$imageIcon", game.ImageIcon));
@@ -31,32 +32,22 @@ namespace BestiaryApplication.GamesModule.Repository
 
         public static void UpdateGame(Game game)
         {
-            var id = game.Id;
-            var name = game.Name;
-            var registeredCreatures = game.RegisteredCreatures;
-            var dateRegistered = game.DateRegistered;
-            var imageIcon = game.ImageIcon;
-
             using (var connection = new SqliteConnection(App.DatabasePath))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
 
-                command.CommandText = @"UPDATE game SET name = $name,
-                                        registeredCreatures = $registeredCreatures,
-                                        dateRegistered = $dateRegistered, 
+                command.CommandText = @"UPDATE games SET name = $name, 
                                         imageIcon = $imageIcon WHERE id = $id";
 
-                command.Parameters.Add(new SqliteParameter("$id", id));
-                command.Parameters.Add(new SqliteParameter("$name", name));
-                command.Parameters.Add(new SqliteParameter("$registeredCreatures", registeredCreatures));
-                command.Parameters.Add(new SqliteParameter("$dateRegistered", dateRegistered));
-                command.Parameters.Add(new SqliteParameter("$imageIcon", imageIcon));
+                command.Parameters.Add(new SqliteParameter("$id", game.Id));
+                command.Parameters.Add(new SqliteParameter("$name", game.Name));
+                command.Parameters.Add(new SqliteParameter("$imageIcon", game.ImageIcon));
                 command.ExecuteNonQuery();
             }
         }
 
-        public static void UpdateGameImageIcon(byte[] imageIcon, int id)
+        public static void UpdateGameRegisteredCreatures(int gameId)
         {
             using (var connection = new SqliteConnection(App.DatabasePath))
             {
@@ -64,10 +55,9 @@ namespace BestiaryApplication.GamesModule.Repository
 
                 var command = connection.CreateCommand();
 
-                command.CommandText = $@"UPDATE game SET imageIcon = $imageIcon
-                                         WHERE id = $id";
-                command.Parameters.Add(new SqliteParameter("$imageIcon", imageIcon));
-                command.Parameters.Add(new SqliteParameter("$id", id));
+                command.CommandText = @"UPDATE games SET registeredCreatures = registeredCreatures + 1
+                                        WHERE id = $gameId";
+                command.Parameters.Add(new SqliteParameter("$gameId", gameId));
                 command.ExecuteNonQuery();
             }
         }
@@ -83,11 +73,11 @@ namespace BestiaryApplication.GamesModule.Repository
                     var command = connection.CreateCommand();
 
                     command.Transaction = transaction;
-                    command.CommandText = "DELETE FROM creature WHERE gameId = $id";
+                    command.CommandText = "DELETE FROM creatures WHERE gameId = $id";
                     command.Parameters.Add(new SqliteParameter("$id", id));
                     command.ExecuteNonQuery();
 
-                    command.CommandText = $"DELETE FROM game WHERE id = $id";
+                    command.CommandText = $"DELETE FROM games WHERE id = $id";
                     command.ExecuteNonQuery();
 
                     transaction.Commit();
@@ -105,7 +95,7 @@ namespace BestiaryApplication.GamesModule.Repository
 
                 var command = connection.CreateCommand();
 
-                command.CommandText = "SELECT * FROM game";
+                command.CommandText = "SELECT * FROM games";
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -115,9 +105,10 @@ namespace BestiaryApplication.GamesModule.Repository
                         {
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1),
-                            RegisteredCreatures = reader.GetInt32(2),
-                            DateRegistered = reader.GetInt64(3),
-                            ImageIcon = reader.IsDBNull(4) ? null : (byte[])reader["imageIcon"],
+                            Genre = reader.GetString(2),
+                            RegisteredCreatures = reader.GetInt32(3),
+                            DateRegistered = reader.GetInt64(4),
+                            ImageIcon = (byte[])reader["imageIcon"],
                         };
 
                         games.Add(game);
@@ -137,7 +128,7 @@ namespace BestiaryApplication.GamesModule.Repository
 
                 var command = connection.CreateCommand();
 
-                command.CommandText = $"SELECT * FROM game WHERE name = $name";
+                command.CommandText = $"SELECT * FROM games WHERE name = $name";
                 command.Parameters.Add(new SqliteParameter("$name", name));
 
                 using (var reader = command.ExecuteReader())
@@ -147,9 +138,10 @@ namespace BestiaryApplication.GamesModule.Repository
                         Game game = new()
                         {
                             Name = reader.GetString(1),
-                            RegisteredCreatures = reader.GetInt32(2),
-                            DateRegistered = reader.GetInt64(3),
-                            ImageIcon = reader.IsDBNull(4) ? null : (byte[])reader["ImageIcon"],
+                            Genre = reader.GetString(2),
+                            RegisteredCreatures = reader.GetInt32(3),
+                            DateRegistered = reader.GetInt64(4),
+                            ImageIcon = (byte[])reader["ImageIcon"],
                         };
 
                         games.Add(game);

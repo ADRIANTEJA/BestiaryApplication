@@ -22,17 +22,7 @@ namespace BestiaryApplication.CreatureModule.Model
 
         public string Description { set; get; }
 
-        public enum element
-        {
-            Water,
-            Fire,
-            Wind,
-            Earth,
-            Light,
-            Darkness
-        }
-
-        public element Element { get; set; }
+        public string Element { set; get; }
 
         public byte[]? ImageIcon { set; get; } 
     }

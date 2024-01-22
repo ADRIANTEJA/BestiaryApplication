@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:resources="clr-namespace:BestiaryApplication.Common.Resources" 
         xmlns:sharedControls="clr-namespace:BestiaryApplication.Common.SharedControls.Buttons"
+        xmlns:viewModel="clr-namespace:BestiaryApplication.MainModule.MainViewModel"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="640"
@@ -12,7 +13,8 @@
         ResizeMode="CanMinimize"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="Transparent">
+        Background="Transparent"
+        Effect="{StaticResource main_window_drop_shadow}">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -21,18 +23,18 @@
                                                   IsPressedBackground="{StaticResource buttons_highlight_color}"
                                                   OnEventOpacity="1"
                                                   Opacity="0"/>
+
+            <viewModel:MainViewModel x:Key="main_view_model"/>
         </ResourceDictionary>
     </Window.Resources>
 
     <Border 
         Background="{StaticResource main_window_background}"
         BorderBrush="{StaticResource main_window_borders_color}"
-        BorderThickness="3"
-        CornerRadius="5"
-        Effect="{StaticResource main_window_drop_shadow}">
-        
-        <Grid x:Name="main_window_container"
-              Margin="5">
+        BorderThickness="2"
+        CornerRadius="5">
+
+        <Grid Margin="2,2,2,0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
@@ -40,10 +42,9 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid x:Name="main_window_header"
-              Style="{DynamicResource main_window_header_style}"
-              MouseDown="MoveMainWindow"
-              Margin="1">
+            <Grid Background="{StaticResource main_window_header_gradient}"
+                  MouseDown="MoveMainWindow"
+                  Margin="1">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50"/>
@@ -58,33 +59,37 @@
                            FontSize="15"
                            Grid.Column="0"/>
 
-                <sharedControls:MinimizeButton Grid.Column="2"
-                                               Click="MinimizeApplication"
-                                               Background="{Binding Tag, ElementName=main_window_header}"
-                                               Margin="0,0,3,0"/>
-                <sharedControls:QuitButton Grid.Column="3"
-                                           Click="CloseApplication"
-                                           Background="{Binding Tag, ElementName=main_window_header}"
-                                           Margin="3,0,0,0"/>
+                <sharedControls:MinimizeButton 
+                    Grid.Column="2"
+                    Click="MinimizeApplication"
+                    Background="{Binding Tag, ElementName=main_window_header}"
+                    Margin="0,0,3,0"/>
+
+                <sharedControls:QuitButton 
+                    Grid.Column="3"
+                    Click="CloseApplication"
+                    Background="{Binding Tag, ElementName=main_window_header}"
+                    Margin="3,0,0,0"/>
             </Grid>
 
             <Grid Grid.Row="1"    
-                  Background="{DynamicResource main_theme_color}">
+                  Background="{DynamicResource main_theme_color}"
+                  Margin="1,1,1,0">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="161*"/>
+                    <ColumnDefinition Width="356*"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Tag="{StaticResource slide_menu_button_tag}"
                         Style="{StaticResource main_buttons_style}"
                         x:Name="main_menu_button"
-                        Grid.Row="0"
-                        Margin="1,0,1,1" 
-                        Click="ShowMenu" Height="28" VerticalAlignment="Bottom">
+                        Margin="2,0,0,2" 
+                        Click="ShowMenu" Height="28" VerticalAlignment="Center">
 
                     <Image Source="pack://Application:,,,/Common/Resources/Assets/ControlIcons/bestiary_app_menu_icon.png"
-                           Margin="1"/>
+                           Margin="-1"/>
 
                 </Button>
 
@@ -94,7 +99,7 @@
                            Background="Transparent"
                            Text="Home"
                            FontSize="18"
-                           Padding="500,3"/>
+                           Padding="500,3" Grid.ColumnSpan="2"/>
 
             </Grid>
 
@@ -137,7 +142,7 @@
 
 
             <Frame x:Name="main_page_hoster"
-                   Margin="0,3"
+                   Margin="0,2,0,1"
                    Source="MainPage.xaml"
                    NavigationUIVisibility="Hidden"
                    Grid.Row="2"/>

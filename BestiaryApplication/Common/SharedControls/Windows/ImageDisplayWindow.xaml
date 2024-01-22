@@ -1,0 +1,52 @@
+﻿<Window x:Class="BestiaryApplication.Common.SharedControls.Windows.ImageDisplayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sharedControls="clr-namespace:BestiaryApplication.Common.SharedControls.Buttons"  
+        mc:Ignorable="d"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        Background="Transparent"
+        d:DesignHeight="442" 
+        d:DesignWidth="652"
+        Height="442"
+        Width="652"
+        ResizeMode="NoResize"
+        WindowStartupLocation="Manual" 
+        KeyDown="OnEsckeyDown">
+
+    <Border Background="{StaticResource main_window_background}"
+            BorderBrush="{StaticResource main_window_borders_color}"
+            BorderThickness="2"
+            CornerRadius="5"
+            Margin="1">
+
+        <Grid Margin="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Background="{StaticResource main_window_header_gradient}"
+                  Margin="1" 
+                  MouseDown="MoveMouse">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="33"/>
+                </Grid.ColumnDefinitions>
+
+                <sharedControls:QuitButton 
+                    Grid.Column="1"
+                    Background="{Binding Tag, ElementName=main_window_header}"
+                    Margin="3,0,0,0" 
+                    Click="OnQuitButtonClick"/>
+            </Grid>
+
+            <Image x:Name="zoomed_image"
+                   Grid.Row="1"
+                   Margin="2"/>
+        </Grid>
+    </Border>
+</Window>
